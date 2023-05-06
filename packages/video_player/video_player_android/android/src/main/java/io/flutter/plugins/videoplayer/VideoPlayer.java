@@ -83,7 +83,14 @@ final class VideoPlayer {
     DataSource.Factory dataSourceFactory =
         new DefaultDataSource.Factory(context, httpDataSourceFactory);
 
-    MediaSource mediaSource = buildMediaSource(uri, dataSourceFactory, formatHint);
+//    MediaSource mediaSource = buildMediaSource(uri, dataSourceFactory, formatHint);
+
+    MediaSource mediaSource;
+    if (dataSource.contains("/file/url?t=") || dataSource.contains("/file/newurl?t=") || dataSource.contains("/file/url1?t=") || dataSource.contains("/file/url2?t=") || dataSource.contains("/file/url3?t=") || dataSource.contains("/file/url4?t=") || dataSource.contains("/file/url5?t=") || dataSource.contains("/file/preview?t=")) {
+      mediaSource = buildMediaSource(uri, dataSourceFactory, FORMAT_HLS);
+    } else {
+      mediaSource = buildMediaSource(uri, dataSourceFactory, formatHint);
+    }
 
     exoPlayer.setMediaSource(mediaSource);
     exoPlayer.prepare();
@@ -310,7 +317,8 @@ final class VideoPlayer {
           width = exoPlayer.getVideoFormat().height;
           height = exoPlayer.getVideoFormat().width;
         }
-        event.put("width", width);
+//        event.put("width", width);
+        event.put("width", (int) (width * videoFormat.pixelWidthHeightRatio));
         event.put("height", height);
 
         // Rotating the video with ExoPlayer does not seem to be possible with a Surface,
